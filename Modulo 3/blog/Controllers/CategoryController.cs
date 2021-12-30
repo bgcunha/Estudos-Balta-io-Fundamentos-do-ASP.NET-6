@@ -90,7 +90,7 @@ public class CategoryController : ControllerBase
         }
         catch (DbUpdateException e)
         {
-            return StatusCode(500, "Não foi possível alerar a categoria!");
+            return StatusCode(500, "Não foi possível alterar a categoria!");
         }
         catch (Exception e)
         {
