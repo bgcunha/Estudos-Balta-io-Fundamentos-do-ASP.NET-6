@@ -10,7 +10,7 @@ public class BlogDataContext : DbContext
     public DbSet<Post>? Posts { get; set; }
     public DbSet<User>? Users { get; set; }
 
-    public DbSet<CategoryWithCount>? CategoryWithCounts { get; set; }
+    //public DbSet<CategoryWithCount>? CategoryWithCounts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
@@ -24,16 +24,16 @@ public class BlogDataContext : DbContext
         modelBuilder.ApplyConfiguration(new PostMap());
         modelBuilder.ApplyConfiguration(new UserMap());
 
-        modelBuilder.Entity<CategoryWithCount>(x =>
-        {
-            x.ToSqlQuery(@"
-                                SELECT 
-                                    COUNT([CategoryId]) AS [Count],   
-                                    [Title]  as Name    
-                                FROM [Post] AS p
-                                GROUP BY TITLE"
-                        );
-        });
+        //modelBuilder.Entity<CategoryWithCount>(x =>
+        //{
+        //    x.ToSqlQuery(@"
+        //                        SELECT 
+        //                            COUNT([CategoryId]) AS [Count],   
+        //                            [Title]  as Name    
+        //                        FROM [Post] AS p
+        //                        GROUP BY TITLE"
+        //                );
+        //});
     }
 
 }

@@ -47,14 +47,14 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            context.Categories.AddAsync(model);
-            context.SaveChangesAsync();
+            await context.Categories.AddAsync(model);
+            await context.SaveChangesAsync();
 
             return Created($"v1/categories/{model.Id}", model);
         }
         catch (DbUpdateException e)
         {
-            return StatusCode(500, "Não foi possivel incluir a categoria!");
+            return StatusCode(500, "Não foi possível incluir a categoria!");
         }
         catch (Exception e)
         {
@@ -62,7 +62,7 @@ public class CategoryController : ControllerBase
         }
     }
 
-    [HttpPut("v1/categories/id:int")]
+    [HttpPut("v1/categories/{id:int}")]
     public async Task<IActionResult> PutPostAsync([FromRoute] int id, [FromBody] Category model, [FromServices] BlogDataContext context)
     {
         try
@@ -73,13 +73,13 @@ public class CategoryController : ControllerBase
             category.Slug = model.Slug;
 
             context.Categories.Update(category);
-            context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return Ok();
         }
         catch (DbUpdateException e)
         {
-            return StatusCode(500, "Não foi possivel alerar a categoria!");
+            return StatusCode(500, "Não foi possível alerar a categoria!");
         }
         catch (Exception e)
         {
@@ -88,24 +88,27 @@ public class CategoryController : ControllerBase
     }
 
     [HttpDelete("v1/categories/{id:int}")]
-    public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromBody] Category model, [FromServices] BlogDataContext context)
+    public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromServices] BlogDataContext context)
     {
         try
         {
             var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
-            context.Categories.Remove(category);
-            context.SaveChanges();
+            if (category == null)
+                return NotFound("Conteúdo não encontrado");
 
-            return Created($"v1/categories/{model.Id}", model);
+            context.Categories.Remove(category);
+            await context.SaveChangesAsync();
+
+            return Ok(category);
         }
         catch (DbUpdateException e)
         {
-            return StatusCode(500, "Não foi possivel deletar a categoria!");
+            return StatusCode(500,"Não foi possível excluir a categoria");
         }
         catch (Exception e)
         {
-            return BadRequest("Falha interna no servidor!");
+            return StatusCode(500, "Falha interna no servidor");
         }
     }
 }
