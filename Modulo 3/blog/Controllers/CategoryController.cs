@@ -44,7 +44,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost("v1/categories")]
-    public async Task<IActionResult> PostAsync([FromBody] CreateCategoryVM model, [FromServices] BlogDataContext context)
+    public async Task<IActionResult> PostAsync([FromBody] EditorCategoryVM model, [FromServices] BlogDataContext context)
     {
         try
         {
@@ -71,11 +71,14 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut("v1/categories/{id:int}")]
-    public async Task<IActionResult> PutPostAsync([FromRoute] int id, [FromBody] Category model, [FromServices] BlogDataContext context)
+    public async Task<IActionResult> PutPostAsync([FromRoute] int id, [FromBody] EditorCategoryVM model, [FromServices] BlogDataContext context)
     {
         try
         {
             var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            
+            if (category == null)
+                return NotFound("Conteúdo não encontrado");
 
             category.Name = model.Name;
             category.Slug = model.Slug;
