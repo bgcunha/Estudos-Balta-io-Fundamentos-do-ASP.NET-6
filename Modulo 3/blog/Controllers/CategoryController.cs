@@ -16,11 +16,11 @@ public class CategoryController : ControllerBase
         {
             var categories = await context.Categories.ToListAsync();
 
-            return Ok(categories);
+            return Ok(new ResultViewModel<List<Category>>(categories));
         }
         catch (Exception)
         {
-            return BadRequest("Falha interna no servidor!");
+            return BadRequest(new ResultViewModel<List<Category>>("Falha Interna no servdor!"));
         }
     }
 
