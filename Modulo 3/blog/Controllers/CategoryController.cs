@@ -48,6 +48,10 @@ public class CategoryController : ControllerBase
     {
         try
         {
+            //Somente de exemplo
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             var category = new Category
             {
                 Id = 0,
