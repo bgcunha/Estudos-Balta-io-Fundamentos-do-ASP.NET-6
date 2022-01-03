@@ -18,7 +18,7 @@ public class CategoryController : ControllerBase
 
             return Ok(categories);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return BadRequest("Falha interna no servidor!");
         }
@@ -36,7 +36,7 @@ public class CategoryController : ControllerBase
 
             return Ok(categories);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return BadRequest("Falha interna no servidor!");
         }
@@ -60,11 +60,11 @@ public class CategoryController : ControllerBase
 
             return Created($"v1/categories/{category.Id}", category);
         }
-        catch (DbUpdateException e)
+        catch (DbUpdateException)
         {
             return StatusCode(500, "Não foi possível incluir a categoria!");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return BadRequest("Falha interna no servidor!");
         }
@@ -76,7 +76,7 @@ public class CategoryController : ControllerBase
         try
         {
             var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
-            
+
             if (category == null)
                 return NotFound("Conteúdo não encontrado");
 
@@ -88,11 +88,11 @@ public class CategoryController : ControllerBase
 
             return Ok();
         }
-        catch (DbUpdateException e)
+        catch (DbUpdateException)
         {
             return StatusCode(500, "Não foi possível alterar a categoria!");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return BadRequest("Falha interna no servidor!");
         }
@@ -113,11 +113,11 @@ public class CategoryController : ControllerBase
 
             return Ok(category);
         }
-        catch (DbUpdateException e)
+        catch (DbUpdateException)
         {
             return StatusCode(500, "Não foi possível excluir a categoria");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return StatusCode(500, "Falha interna no servidor");
         }
