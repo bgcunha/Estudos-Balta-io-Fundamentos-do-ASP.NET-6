@@ -29,16 +29,16 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            var categories = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            var category = await context.Categories.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (categories == null)
-                return NotFound();
+            if (category == null)
+                return NotFound(new ResultViewModel<Category>("Conteúdo não encontrado!"));
 
-            return Ok(categories);
+            return Ok(new ResultViewModel<Category>(category));
         }
         catch (Exception)
         {
-            return BadRequest("Falha interna no servidor!");
+            return BadRequest(new ResultViewModel<List<Category>>("Falha Interna no servdor!"));
         }
 
     }
