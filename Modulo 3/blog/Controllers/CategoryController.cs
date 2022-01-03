@@ -1,4 +1,5 @@
-﻿using blog.ViewModels;
+﻿using blog.Extensions;
+using blog.ViewModels;
 using Blog.Data;
 using Blog.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -48,9 +49,9 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            //Somente de exemplo
+            //Usando ModelStateExtension
             if (!ModelState.IsValid)
-                return BadRequest();
+                return BadRequest( new ResultViewModel<Category>(ModelState.GetErros()));
 
             var category = new Category
             {
