@@ -8,6 +8,8 @@ public class HomeController : ControllerBase
 {
     [HttpGet]
     public IActionResult Get()
-        => Ok( new { Resposta = "Hello", Texto = "World"});
+    {
+        return Ok(new { Resposta = "Hello", Texto = "World" });
+    }
 }
 
