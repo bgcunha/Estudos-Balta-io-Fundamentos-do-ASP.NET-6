@@ -18,6 +18,7 @@ public class TokenService
             {
                 new Claim(ClaimTypes.Name, "brunocunha"),
                 new Claim(ClaimTypes.Role, "admin"),
+                new Claim(ClaimTypes.Role, "user"),
                 new Claim("fruta", "Açai")
             }),
             Expires = DateTime.UtcNow.AddHours(8),

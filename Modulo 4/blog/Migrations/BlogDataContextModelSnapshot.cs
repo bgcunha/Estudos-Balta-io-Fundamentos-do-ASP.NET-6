@@ -148,7 +148,10 @@ namespace blog.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR(160)")
+                        .HasColumnName("Email");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -160,7 +163,10 @@ namespace blog.Migrations
                         .HasColumnName("Name");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("VARCHAR(255)")
+                        .HasColumnName("PasswordHash");
 
                     b.Property<string>("Slug")
                         .IsRequired()
