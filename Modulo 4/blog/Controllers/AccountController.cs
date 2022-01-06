@@ -17,9 +17,9 @@ public class AccountController : ControllerBase
     {
         _tokenService = tokenService;
     }
-    
+
     [HttpPost("v1/accounts/")]
-    public async Task<IActionResult> Post( [FromBody] RegisterVM model, [FromServices] BlogDataContext context)
+    public async Task<IActionResult> Post([FromBody] RegisterVM model, [FromServices] BlogDataContext context)
     {
         if (!ModelState.IsValid)
             return BadRequest(new ResultViewModel<string>(ModelState.GetErros()));
@@ -28,11 +28,11 @@ public class AccountController : ControllerBase
         {
             Name = model.Name,
             Email = model.Email,
-            Slug = model.Email.Replace("@","-").Replace(".", "-")
+            Slug = model.Email.Replace("@", "-").Replace(".", "-")
         };
 
         var password = PasswordGenerator.Generate(25);
-        user.PasswordHash =  PasswordHasher.Hash(password);
+        user.PasswordHash = PasswordHasher.Hash(password);
 
         try
         {
@@ -41,25 +41,52 @@ public class AccountController : ControllerBase
 
             return Ok(new ResultViewModel<dynamic>(new
             {
-                user  = user.Email, password
+                user = user.Email,
+                password
             }));
         }
         catch (DbUpdateException)
         {
-            return StatusCode(400, new ResultViewModel<string>("Este e-mail já está cadastrado!") );
+            return StatusCode(400, new ResultViewModel<string>("Este e-mail já está cadastrado!"));
         }
-        catch (Exception )
+        catch (Exception)
         {
             return StatusCode(500, new ResultViewModel<Category>("Falha interna no servidor"));
         }
     }
 
-    [HttpPost("v1/login")]
-    public IActionResult Login()
+    [HttpPost("v1/accounts/login")]
+    public async Task<IActionResult> Login(
+        [FromBody] LoginVM model,
+        [FromServices] BlogDataContext context,
+        [FromServices] TokenService tokenService
+    )
     {
-        var token = _tokenService.GenerateToken(new Models.User());
 
-        return Ok(token);
+        if (!ModelState.IsValid)
+            return BadRequest(new ResultViewModel<string>(ModelState.GetErros()));
+
+        var user = await context
+           .Users
+           .AsNoTracking()
+           .Include(x => x.Roles)
+           .FirstOrDefaultAsync(x => x.Email == model.Email);
+
+        if (user == null)
+            return StatusCode(401, new ResultViewModel<string>("Usuário ou senha inválidos"));
+
+        if (!PasswordHasher.Verify(user.PasswordHash, model.Password))
+            return StatusCode(401, new ResultViewModel<string>("Usuário ou senha inválidos"));
+
+        try
+        {
+            var token = tokenService.GenerateToken(user);
+            return Ok(new ResultViewModel<string>(token, null));
+        }
+        catch
+        {
+            return StatusCode(500, new ResultViewModel<string>("05X04 - Falha interna no servidor"));
+        }
     }
 
     // [Authorize(Roles = "user")]
